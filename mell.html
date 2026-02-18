@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MELL</title>
+
+<style>
+body{
+margin:0;
+height:100vh;
+overflow:hidden;
+background:black;
+font-family:Arial, sans-serif;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+transition:1.5s;
+text-align:center;
+}
+
+/* Responsive font sizes */
+h1{
+position:absolute;
+top:20px;
+font-size:8vw;
+letter-spacing:3vw;
+opacity:0;
+animation:fadeIn 2s forwards;
+}
+
+.main-text{
+font-size:6vw;
+margin-top:25vh;
+min-height:60px;
+padding:0 20px;
+}
+
+button{
+padding:12px 25px;
+font-size:5vw;
+border:none;
+border-radius:12px;
+cursor:pointer;
+margin:10px;
+transition:0.4s;
+}
+
+#yes{
+background:#ff4d6d;
+color:white;
+box-shadow:0 0 15px #ff4d6d;
+}
+
+#no{
+background:white;
+color:black;
+}
+
+/* Fade */
+@keyframes fadeIn{
+to{opacity:1;}
+}
+
+/* Flash */
+.flash{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:white;
+animation:flash 0.6s forwards;
+z-index:999;
+}
+
+@keyframes flash{
+0%{opacity:0;}
+50%{opacity:1;}
+100%{opacity:0;}
+}
+
+/* Beating heart */
+.big-heart{
+font-size:25vw;
+animation:beat 1s infinite;
+margin-top:20vh;
+}
+
+@keyframes beat{
+0%{transform:scale(1);}
+50%{transform:scale(1.15);}
+100%{transform:scale(1);}
+}
+
+.final-text{
+font-size:6vw;
+padding:0 20px;
+margin-top:30px;
+opacity:0;
+animation:fadeIn 3s forwards;
+}
+
+/* Floating hearts */
+.heart{
+position:absolute;
+font-size:5vw;
+opacity:0.8;
+animation:float 7s linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh) scale(0.6);}
+100%{transform:translateY(-10vh) scale(1.3);}
+}
+</style>
+</head>
+
+<body>
+
+<h1>MELL</h1>
+
+<div class="main-text" id="text"></div>
+
+<div>
+<button id="yes">YES 💜</button>
+<button id="no">NO</button>
+</div>
+
+<script>
+
+/* Typing effect */
+const message="WILL U BEEEEEE MY VALENTINEEEEE 💜";
+let i=0;
+function typeWriter(){
+if(i<message.length){
+document.getElementById("text").innerHTML+=message.charAt(i);
+i++;
+setTimeout(typeWriter,50);
+}
+}
+typeWriter();
+
+const noBtn=document.getElementById("no");
+const yesBtn=document.getElementById("yes");
+
+let clickCount=0;
+let noScale=1;
+let yesScale=1;
+
+/* Mobilde kaçma yerine sadece küçülme (daha iyi UX) */
+noBtn.addEventListener("click",()=>{
+
+clickCount++;
+
+noScale-=0.15;
+if(noScale<0.3) noScale=0.3;
+noBtn.style.transform="scale("+noScale+")";
+
+yesScale+=0.15;
+yesBtn.style.transform="scale("+yesScale+")";
+
+if(clickCount==3) noBtn.textContent="are u sure";
+if(clickCount==5) noBtn.textContent="u can't escape";
+
+if(clickCount==7){
+noBtn.textContent="YES, MY LOVE 💜";
+noBtn.style.background="#9d4edd";
+noBtn.style.color="white";
+noBtn.onclick=()=>finalScene();
+}
+});
+
+yesBtn.addEventListener("click",()=>finalScene());
+
+function finalScene(){
+
+const flash=document.createElement("div");
+flash.classList.add("flash");
+document.body.appendChild(flash);
+
+setTimeout(()=>{
+document.body.innerHTML="";
+
+/* Heart */
+const heart=document.createElement("div");
+heart.classList.add("big-heart");
+heart.innerHTML="💜";
+document.body.appendChild(heart);
+
+/* Romantic text */
+const text=document.createElement("div");
+text.classList.add("final-text");
+text.innerHTML="In a world full of temporary things…<br>you are my forever 💜";
+document.body.appendChild(text);
+
+/* Floating hearts */
+setInterval(()=>{
+const h=document.createElement("div");
+h.classList.add("heart");
+h.innerHTML="💜";
+h.style.left=Math.random()*100+"vw";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),7000);
+},400);
+
+},600);
+}
+</script>
+
+</body>
+</html>
