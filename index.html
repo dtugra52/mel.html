@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +8,7 @@
 <style>
 body{
 margin:0;
-font-family:sans-serif;
+font-family:Arial, sans-serif;
 background:linear-gradient(135deg,#1a001f,#3a0ca3);
 color:white;
 display:flex;
@@ -16,28 +16,29 @@ justify-content:center;
 align-items:center;
 height:100vh;
 overflow:hidden;
+text-align:center;
 }
 
-/* Lock screen */
 #lockScreen{
 display:flex;
 flex-direction:column;
-align-items:center;
 gap:15px;
+align-items:center;
 }
 
 input{
 padding:12px;
 border:none;
-border-radius:10px;
+border-radius:12px;
 font-size:16px;
 outline:none;
+width:220px;
 }
 
 button{
 padding:12px 20px;
 border:none;
-border-radius:12px;
+border-radius:15px;
 font-size:16px;
 cursor:pointer;
 transition:0.3s;
@@ -48,23 +49,30 @@ display:none;
 flex-direction:column;
 align-items:center;
 gap:20px;
-text-align:center;
+position:relative;
+width:100%;
+height:100%;
+}
+
+#yes{
+background:#ff4d6d;
+color:white;
+}
+
+#no{
+position:absolute;
+background:white;
+color:black;
 }
 
 .big-heart{
-font-size:80px;
+font-size:90px;
 animation:pulse 1s infinite alternate;
 }
 
 @keyframes pulse{
 from{transform:scale(1);}
 to{transform:scale(1.2);}
-}
-
-.final-text{
-font-size:20px;
-text-align:center;
-padding:20px;
 }
 
 .flash{
@@ -86,22 +94,18 @@ animation:flashAnim 0.6s forwards;
 
 <body>
 
-<!-- LOCK SCREEN -->
 <div id="lockScreen">
 <h2>💜 Enter Password</h2>
-<p>İpucu: ilk mesajlaştığımız gün</p>
-<input type="password" id="password" placeholder="Şifre...">
-<button onclick="checkPassword()">Giriş</button>
+<p>Hint: the day we first texted</p>
+<input type="password" id="password" placeholder="Password...">
+<button onclick="checkPassword()">Unlock</button>
 <p id="error"></p>
 </div>
 
-<!-- MAIN CONTENT -->
 <div id="mainContent">
 <h1 id="text"></h1>
-<div>
 <button id="yes">YES 💜</button>
 <button id="no">No</button>
-</div>
 </div>
 
 <script>
@@ -119,7 +123,7 @@ return text
 .replace(/\s+/g,"");
 }
 
-/* PASSWORD CHECK */
+/* PASSWORD */
 function checkPassword(){
 
 const input=document.getElementById("password").value;
@@ -136,7 +140,7 @@ startMain();
 
 }else{
 
-document.getElementById("error").innerText="Yanlış 💜 tekrar dene";
+document.getElementById("error").innerText="Wrong password 😈 try again";
 
 if(navigator.vibrate){
 navigator.vibrate([200,100,200]);
@@ -165,15 +169,25 @@ const yesBtn=document.getElementById("yes");
 
 let clickCount=0;
 
+/* No button moves */
+function moveNo(){
+const x=Math.random()*(window.innerWidth-100);
+const y=Math.random()*(window.innerHeight-100);
+noBtn.style.left=x+"px";
+noBtn.style.top=y+"px";
+}
+
+noBtn.addEventListener("mouseover",moveNo);
+noBtn.addEventListener("click",moveNo);
+
 noBtn.addEventListener("click",()=>{
 clickCount++;
 
-if(clickCount==2) noBtn.textContent="Emin misin?";
-if(clickCount==4) noBtn.textContent="Kaçamazsın 😈";
-
-yesBtn.style.transform="scale("+(1+clickCount*0.1)+")";
+if(clickCount==2) noBtn.textContent="Are you sure?";
+if(clickCount==4) noBtn.textContent="You can't escape 😈";
 });
 
+/* YES */
 yesBtn.addEventListener("click",finalScene);
 }
 
@@ -193,7 +207,8 @@ heart.innerHTML="💜";
 document.body.appendChild(heart);
 
 const text=document.createElement("div");
-text.classList.add("final-text");
+text.style.fontSize="22px";
+text.style.marginTop="20px";
 text.innerHTML="In a world full of temporary things,<br>you are my forever 💜";
 document.body.appendChild(text);
 
