@@ -1,3 +1,109 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You 💜</title>
+
+<style>
+body{
+margin:0;
+font-family:sans-serif;
+background:linear-gradient(135deg,#1a001f,#3a0ca3);
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+overflow:hidden;
+}
+
+/* Lock screen */
+#lockScreen{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:15px;
+}
+
+input{
+padding:12px;
+border:none;
+border-radius:10px;
+font-size:16px;
+outline:none;
+}
+
+button{
+padding:12px 20px;
+border:none;
+border-radius:12px;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+#mainContent{
+display:none;
+flex-direction:column;
+align-items:center;
+gap:20px;
+text-align:center;
+}
+
+.big-heart{
+font-size:80px;
+animation:pulse 1s infinite alternate;
+}
+
+@keyframes pulse{
+from{transform:scale(1);}
+to{transform:scale(1.2);}
+}
+
+.final-text{
+font-size:20px;
+text-align:center;
+padding:20px;
+}
+
+.flash{
+position:fixed;
+width:100%;
+height:100%;
+background:white;
+top:0;
+left:0;
+animation:flashAnim 0.6s forwards;
+}
+
+@keyframes flashAnim{
+0%{opacity:1;}
+100%{opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOCK SCREEN -->
+<div id="lockScreen">
+<h2>💜 Enter Password</h2>
+<p>İpucu: ilk mesajlaştığımız gün</p>
+<input type="password" id="password" placeholder="Şifre...">
+<button onclick="checkPassword()">Giriş</button>
+<p id="error"></p>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="mainContent">
+<h1 id="text"></h1>
+<div>
+<button id="yes">YES 💜</button>
+<button id="no">No</button>
+</div>
+</div>
+
 <script>
 
 /* Normalize */
@@ -13,7 +119,7 @@ return text
 .replace(/\s+/g,"");
 }
 
-/* Password check */
+/* PASSWORD CHECK */
 function checkPassword(){
 
 const input=document.getElementById("password").value;
@@ -30,27 +136,19 @@ startMain();
 
 }else{
 
-document.getElementById("error").innerText="Hmm... tekrar düşün 💜";
+document.getElementById("error").innerText="Yanlış 💜 tekrar dene";
 
-/* Titreşim (mobil destekliyorsa) */
 if(navigator.vibrate){
 navigator.vibrate([200,100,200]);
 }
 
-/* Input shake efekti */
-const inputBox=document.getElementById("password");
-inputBox.style.transition="0.1s";
-inputBox.style.transform="translateX(-5px)";
-setTimeout(()=>inputBox.style.transform="translateX(5px)",100);
-setTimeout(()=>inputBox.style.transform="translateX(0px)",200);
-
 }
 }
 
-/* Main experience */
+/* MAIN */
 function startMain(){
 
-const message="WILL U BEEEEEE MY VALENTINEEEEE 💜";
+const message="Will you be my Valentine? 💜";
 let i=0;
 
 function typeWriter(){
@@ -66,34 +164,20 @@ const noBtn=document.getElementById("no");
 const yesBtn=document.getElementById("yes");
 
 let clickCount=0;
-let noScale=1;
-let yesScale=1;
 
 noBtn.addEventListener("click",()=>{
 clickCount++;
 
-noScale-=0.15;
-if(noScale<0.3) noScale=0.3;
-noBtn.style.transform="scale("+noScale+")";
+if(clickCount==2) noBtn.textContent="Emin misin?";
+if(clickCount==4) noBtn.textContent="Kaçamazsın 😈";
 
-yesScale+=0.15;
-yesBtn.style.transform="scale("+yesScale+")";
-
-if(clickCount==3) noBtn.textContent="are u sure";
-if(clickCount==5) noBtn.textContent="u can't escape";
-
-if(clickCount==7){
-noBtn.textContent="YES, MY LOVE 💜";
-noBtn.style.background="#9d4edd";
-noBtn.style.color="white";
-noBtn.onclick=()=>finalScene();
-}
+yesBtn.style.transform="scale("+(1+clickCount*0.1)+")";
 });
 
-yesBtn.addEventListener("click",()=>finalScene());
+yesBtn.addEventListener("click",finalScene);
 }
 
-/* Final Scene */
+/* FINAL */
 function finalScene(){
 
 const flash=document.createElement("div");
@@ -110,10 +194,9 @@ document.body.appendChild(heart);
 
 const text=document.createElement("div");
 text.classList.add("final-text");
-text.innerHTML="In a world full of temporary things…<br>you are my forever 💜";
+text.innerHTML="In a world full of temporary things,<br>you are my forever 💜";
 document.body.appendChild(text);
 
-/* Floating hearts mobile-safe */
 setInterval(()=>{
 const h=document.createElement("div");
 h.innerHTML="💜";
@@ -137,3 +220,6 @@ setTimeout(()=>h.remove(),6000);
 }
 
 </script>
+
+</body>
+</html>
