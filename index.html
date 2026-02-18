@@ -98,7 +98,7 @@ animation:flashAnim 0.6s forwards;
 
 <div id="lockScreen">
 <h2>💜 Enter Password</h2>
-<p>Hint: the day we first texted</p>
+<p>Hint: my phone's password</p>
 <input type="password" id="password" placeholder="Password...">
 <button onclick="checkPassword()">Unlock</button>
 <p id="error"></p>
@@ -112,24 +112,11 @@ animation:flashAnim 0.6s forwards;
 
 <script>
 
-function normalize(text){
-return text.toLowerCase()
-.replace(/ı/g,"i")
-.replace(/ğ/g,"g")
-.replace(/ü/g,"u")
-.replace(/ş/g,"s")
-.replace(/ö/g,"o")
-.replace(/ç/g,"c")
-.replace(/\s+/g,"");
-}
-
 function checkPassword(){
 
-const input=document.getElementById("password").value;
-const normalizedInput=normalize(input);
+const input=document.getElementById("password").value.trim();
 
-if(normalizedInput===normalize("7 kasım") ||
-normalizedInput===normalize("07 kasım")){
+if(input==="120511"){
 
 document.getElementById("lockScreen").style.display="none";
 document.getElementById("mainContent").style.display="flex";
@@ -137,11 +124,12 @@ startMain();
 
 }else{
 
-document.getElementById("error").innerText="Wrong password 😈";
+document.getElementById("error").innerText="Wrong password 😈 try again";
 
 if(navigator.vibrate){
-navigator.vibrate(300);
+navigator.vibrate([200,100,200]);
 }
+
 }
 }
 
@@ -167,11 +155,17 @@ let noScale=1;
 let yesScale=1;
 let moving=true;
 
-/* Bilgisayarda hover kaçma */
+/* PC hover kaçma */
 noBtn.addEventListener("mouseover",()=>{
-if(!moving) return;
-moveNo();
+if(moving) moveNo();
 });
+
+/* Mobil için interval */
+const mobileMove=setInterval(()=>{
+if(moving && window.innerWidth<768){
+moveNo();
+}
+},900);
 
 function moveNo(){
 const x=Math.random()*(window.innerWidth-120);
@@ -180,13 +174,6 @@ noBtn.style.left=x+"px";
 noBtn.style.top=y+"px";
 noBtn.style.transform="scale("+noScale+")";
 }
-
-/* Mobil için otomatik kaçma */
-const mobileMove=setInterval(()=>{
-if(moving && window.innerWidth<768){
-moveNo();
-}
-},800);
 
 noBtn.addEventListener("click",()=>{
 
@@ -202,6 +189,7 @@ if(clickCount==2) noBtn.textContent="are u sure";
 if(clickCount==4) noBtn.textContent="u can't escape";
 
 if(clickCount>=6){
+
 moving=false;
 clearInterval(mobileMove);
 
@@ -213,6 +201,7 @@ noBtn.style.top="65%";
 noBtn.style.transform="translate(-50%,-50%)";
 noBtn.onclick=finalScene;
 }
+
 });
 
 yesBtn.addEventListener("click",finalScene);
