@@ -38,7 +38,7 @@ width:220px;
 button{
 padding:12px 20px;
 border:none;
-border-radius:15px;
+border-radius:20px;
 font-size:16px;
 cursor:pointer;
 transition:0.3s;
@@ -94,6 +94,7 @@ animation:flashAnim 0.6s forwards;
 
 <body>
 
+<!-- LOCK -->
 <div id="lockScreen">
 <h2>💜 Enter Password</h2>
 <p>Hint: the day we first texted</p>
@@ -102,6 +103,7 @@ animation:flashAnim 0.6s forwards;
 <p id="error"></p>
 </div>
 
+<!-- MAIN -->
 <div id="mainContent">
 <h1 id="text"></h1>
 <button id="yes">YES 💜</button>
@@ -168,23 +170,51 @@ const noBtn=document.getElementById("no");
 const yesBtn=document.getElementById("yes");
 
 let clickCount=0;
+let noScale=1;
+let yesScale=1;
+let stopMoving=false;
 
-/* No button moves */
+/* NO MOVE */
 function moveNo(){
+if(stopMoving) return;
+
 const x=Math.random()*(window.innerWidth-100);
 const y=Math.random()*(window.innerHeight-100);
+
 noBtn.style.left=x+"px";
 noBtn.style.top=y+"px";
 }
 
 noBtn.addEventListener("mouseover",moveNo);
 noBtn.addEventListener("click",moveNo);
+noBtn.addEventListener("touchstart",moveNo);
 
+/* CLICK LOGIC */
 noBtn.addEventListener("click",()=>{
+
 clickCount++;
 
-if(clickCount==2) noBtn.textContent="Are you sure?";
-if(clickCount==4) noBtn.textContent="You can't escape 😈";
+noScale-=0.15;
+if(noScale<0.3) noScale=0.3;
+noBtn.style.transform="scale("+noScale+")";
+
+yesScale+=0.15;
+yesBtn.style.transform="scale("+yesScale+")";
+
+if(clickCount==2) noBtn.textContent="are u sure";
+if(clickCount==4) noBtn.textContent="u can't escape";
+
+if(clickCount>=6){
+stopMoving=true;
+noBtn.textContent="YES, MY LOVE 💜";
+noBtn.style.background="#ff4d6d";
+noBtn.style.color="white";
+noBtn.style.left="50%";
+noBtn.style.top="65%";
+noBtn.style.transform="translate(-50%,-50%) scale(1)";
+noBtn.onclick=finalScene;
+}
+
 });
 
 /* YES */
@@ -229,7 +259,7 @@ h.style.opacity="0";
 
 setTimeout(()=>h.remove(),6000);
 
-},400);
+},300);
 
 },600);
 }
